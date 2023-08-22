@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Route::post('/login', [AuthController::class, 'login']);
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{user}', [UserController::class, 'show']);
-Route::apiResource('/invoices', InvoiceController::class);
+Route::middleware('auth:sanctum')->group(function() {
+    Route::apiResource('/invoices', InvoiceController::class);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
